@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="heading">
+        <h1>Stock Market Dashboard</h1>
+    </header>
+    <div class="container">
+        <div class="left-container">
+            <div class="upper">
+                <div class="zomato">
+                    <div class="logo">
+                        
+                    </div>
+                    <h2>Zomato</h2>
+                </div>
+                <div class="price">
+                    <h2>Price</h2>
+                    <div class="price-value">
+                        <h3 id="price"></h3>
+                    </div>
+
+                </div>
+                <div class="quantity">
+                    <form class="form-id">
+                        <input type="number" name="quantity" id="quantity" placeholder="Enter QTY">
+                    </form>
+
+                </div>
+                <div class="buy">
+                    <button class="buy-btn">Buy</button>
+
+                </div>
+                <div class="sell">
+                    <button class="sell-btn">Sell</button>
+
+                </div>
+
+            </div>
+            <div class="lower">
+                <canvas id="priceChart" style="width: 100%;"></canvas>
+            </div>
+        </div>
+        <div class="right-container"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const socket = io("http://localhost:3000");
+
+        let priceData = [];
+        let lastPrice = null;
+
+        const ctx = document.getElementById('priceChart').getContext('2d');
+        const priceChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Stock Price',
+                    data: [],
+                    backgroundColor: [],
+                    borderColor: [],
+                    borderWidth: 1,
+                    barPercentage: 1.0,
+                    categoryPercentage: 1.0
+                }]
+            },
+            options: {
+                scales: {
+                    x:{
+                        // remove gap between bars in the chart
+                        barPercentage: 3,
+                        categoryPercentage: 0.5
+
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        function getColor(currentPrice) {
+            if (lastPrice === null) {
+                lastPrice = currentPrice;
+                return 'green'; 
+            } else if (currentPrice > lastPrice) {
+                lastPrice = currentPrice;
+                return 'green';
+            } else if (currentPrice < lastPrice) {
+                lastPrice = currentPrice;
+                return 'red';
+            } else {
+                return 'green'; 
+            }
+        }
+
+        //reset the chart in every 2 minutes
+        setInterval(() => {
+            priceData = [];
+            priceChart.data.labels = [];
+            priceChart.data.datasets[0].data = [];
+            priceChart.data.datasets[0].backgroundColor = [];
+            priceChart.update();
+        }, 120000);
+        // Handle events from the server
+        socket.on('stockprice', (data) => {
+            priceData.push(parseFloat(data.price));
+            
+            priceChart.data.labels.push('');
+            priceChart.data.datasets[0].data = priceData;
+            priceChart.data.datasets[0].backgroundColor.push(getColor(parseFloat(data.price)));
+            priceChart.update();
+            
+            document.getElementById('price').textContent = data.price;
+        });
+    </script>
+</body>
+</html>

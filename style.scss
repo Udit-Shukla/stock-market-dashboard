@@ -1,0 +1,78 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+    font-family: "Caveat", cursive;
+    overflow: hidden;
+
+}
+.heading{
+    background-color: #1871c2;
+    margin:0.5rem;
+    padding:0.2rem;
+    color:white;
+}
+.container{
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    margin:1rem;
+}
+
+.left-container{
+    margin:0.5rem;
+    width:75%;
+
+}
+.upper{
+    display:flex;
+    margin:0.5rem;
+    justify-content: space-between;
+
+}
+
+.zomato{
+    border:1px solid #000;
+    display:flex;
+    justify-content: space-between;
+    padding:0.5rem;
+    justify-content: space-between;
+    width:25%;
+
+}
+.logo{
+    width:2rem;
+    background-color: yellow;
+}
+
+.price{
+    border:1px solid #000;
+    display:flex;
+    width:40%;
+    justify-content: space-around;
+}
+.price-value{
+    color:#2f9e44;
+}
+.buy-btn{
+    background-color: #2f9e44;
+    border: 1px solid #2f9e44;
+    background-color: #b2f2bb;
+}
+
+.sell-btn{
+    background-color: #e03131;
+    border: 1px solid #e03131;
+    background-color: #ffc9c9;
+}
+
+.lower{
+    border: 1px solid #000;
+    height:500px;
+    margin:0.5rem;
+
+}
+.right-container{
+    width:25%;
+    border:1px solid #000;
+}
